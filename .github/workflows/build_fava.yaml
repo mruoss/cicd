@@ -15,10 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-          submodules: true
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -33,20 +29,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: get latest tags
-        id: versions
-        run: |
-          LATEST=$(cd fava && git describe --abbrev=0 --tags)
-          echo "latest=$LATEST" >> "$GITHUB_OUTPUT"
-
-      - name: Build E2E Image
+      - name: Build Fava Docker Image
         uses: docker/build-push-action@v4
-        id: build_and_push_e2e
+        id: build_image
         with:
           push: true
           load: false
           platforms: linux/amd64,linux/arm64/v8,linux/arm
-          tags: ghcr.io/${{ github.actor }}/fava:${{ steps.versions.outputs.latest }},ghcr.io/${{ github.repository_owner }}/fava:latest
+          tags: ghcr.io/${{ github.repository_owner }}/fava:latest
           cache-from: type=registry,ref=latest
           cache-to: type=inline
-          context: ./fava/contrib/docker
+          context: ./fava
+
+      - name: push docker image
+        run: |
+          OUTPUT=$(docker run --rm fava:michi fava --version 2> /dev/null)
+          VERSION=${OUTPUT#"fava, version "}
+          docker buildx imagetools create ghcr.io/${{ github.repository_owner }}/fava:latest -t ghcr.io/${{ github.repository_owner }}/fava:$VERSION
