@@ -37,12 +37,12 @@ jobs:
           load: false
           platforms: linux/amd64,linux/arm64/v8,linux/arm
           tags: ghcr.io/${{ github.repository_owner }}/fava:latest
-          cache-from: type=registry,ref=latest
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/fava:latest
           cache-to: type=inline
           context: ./fava
 
       - name: push docker image
         run: |
-          OUTPUT=$(docker run --rm fava:michi fava --version 2> /dev/null)
+          OUTPUT=$(docker run --rm ghcr.io/mruoss/fava:latest fava --version 2> /dev/null)
           VERSION=${OUTPUT#"fava, version "}
           docker buildx imagetools create ghcr.io/${{ github.repository_owner }}/fava:latest -t ghcr.io/${{ github.repository_owner }}/fava:$VERSION
