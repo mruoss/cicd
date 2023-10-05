@@ -1,8 +1,9 @@
 #!/bin/sh
 
-if [  -n "${GIT_SRC}" ] && [ -n "${GIT_DST}" ] && [ -d "${GIT_SRC}" ]; then
-    cd "${GIT_DST}" 
-    git clone "${GIT_SRC}"
+if [  -n "${GIT_SRC}" ] && [ -d "${GIT_SRC}" ]; then
+    git clone "${GIT_SRC}" "${GIT_DST}" || true
+    cd "${GIT_DST}"
+    git pull
 fi
 
 exec $@
