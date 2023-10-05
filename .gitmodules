@@ -1,0 +1,3 @@
+[submodule "fava"]
+	path = fava
+	url = git@github.com:beancount/fava.git
