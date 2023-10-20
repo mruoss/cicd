@@ -1,14 +1,21 @@
-FROM python:3.12.0-alpine3.18 as builder
+FROM python:3.12.0-slim AS builder
 
-RUN apk add --update libxml2-dev libxslt-dev gcc musl-dev g++
 RUN pip install --prefix="/install" fava
 
-FROM python:3.12.0-alpine3.18
+FROM python:3.12.0-slim
 
 COPY --from=builder /install /usr/local
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN apk add --update git bash
-RUN adduser -D -g '' fava
+RUN apt-get update \
+    && apt-get install -y git git-lfs bash curl \
+    && apt-get clean
+
+RUN useradd -ms /bin/bash fava
+RUN git lfs install --skip-repo
+RUN echo $(dpkg --print-architecture) \
+    && curl -f -L --output /usr/bin/lfs-folderstore  https://github.com/sinbad/lfs-folderstore/releases/download/v1.0.1/lfs-folderstore-linux-amd64-v1.0.1.zip\
+    && chmod 755 /usr/bin/lfs-folderstore
+
 
 USER fava
 WORKDIR /home/fava

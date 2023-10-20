@@ -35,7 +35,7 @@ jobs:
         with:
           push: true
           load: false
-          platforms: linux/amd64,linux/arm64/v8,linux/arm
+          platforms: linux/amd64
           tags: ghcr.io/${{ github.repository_owner }}/fava:latest
           cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/fava:latest
           cache-to: type=inline
