@@ -7,7 +7,7 @@ FROM python:3.12.0-slim
 COPY --from=builder /install /usr/local
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN apt-get update \
-    && apt-get install -y git git-lfs bash curl \
+    && apt-get install -y git git-lfs bash curl vim \
     && apt-get clean
 
 RUN useradd -ms /bin/bash fava
