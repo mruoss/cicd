@@ -16,10 +16,14 @@ RUN echo $(dpkg --print-architecture) \
     && curl -f -L --output /usr/bin/lfs-folderstore  https://github.com/sinbad/lfs-folderstore/releases/download/v1.0.1/lfs-folderstore-linux-amd64-v1.0.1.zip\
     && chmod 755 /usr/bin/lfs-folderstore
 
+RUN locale-gen de_CH.UTF-8
 
 USER fava
 WORKDIR /home/fava
 
+ENV LANG de_CH.UTF-8  
+ENV LANGUAGE de_CH:en  
+ENV LC_ALL de_CH.UTF-8     
 ENV FAVA_HOST "0.0.0.0"
 EXPOSE 5000
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ] 
