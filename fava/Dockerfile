@@ -1,6 +1,8 @@
 FROM python:3.13.1-slim AS builder
 
-RUN pip install --prefix="/install" fava
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y gcc build-essential \
+    && pip install --prefix="/install" fava
 
 FROM python:3.13.1-slim
 
@@ -21,11 +23,11 @@ RUN sed -i '/de_CH.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 USER fava
 WORKDIR /home/fava
 
-ENV LANG de_CH.UTF-8   
-ENV LANGUAGE de_CH:de  
-ENV LC_ALL de_CH.UTF-8      
+ENV LANG de_CH.UTF-8
+ENV LANGUAGE de_CH:de
+ENV LC_ALL de_CH.UTF-8
 
 ENV FAVA_HOST "0.0.0.0"
 EXPOSE 5000
-ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ] 
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 CMD [ "fava" ]
