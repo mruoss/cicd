@@ -1,10 +1,10 @@
-FROM python:3.14.0-slim AS builder
+FROM python:3.14.1-slim AS builder
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y gcc build-essential flex bison \
     && pip install --prefix="/install" fava
 
-FROM python:3.14.0-slim
+FROM python:3.14.1-slim
 
 COPY --from=builder /install /usr/local
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
